@@ -7,6 +7,7 @@ from transformers import (
     AutoTokenizer
 )
 import logging
+import re
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -132,14 +133,26 @@ class MultilingualTransformer:
         # Decode output
         generated_text = self.tokenizer.decode(outputs[0], skip_special_tokens=True)
         
-        # Log generated text for debugging
-        logger.info(f"Generated text: {generated_text}")
-        
+        # Post-process: extract only the formalized sentence after the last 'Formal:'
+        if 'Formal:' in generated_text:
+            # Take the last occurrence of 'Formal:' and everything after
+            generated_text = generated_text.split('Formal:')[-1].strip()
+            # Stop at the next 'Informal:' if present
+            if 'Informal:' in generated_text:
+                generated_text = generated_text.split('Informal:')[0].strip()
+            # Stop at the first newline if present
+            if '\n' in generated_text:
+                generated_text = generated_text.split('\n')[0].strip()
+            # Stop at the first sentence-ending punctuation if present
+            match = re.match(r'(.+?[.!?])\s', generated_text)
+            if match:
+                generated_text = match.group(1).strip()
+
         # Check if output is trivial
         if generated_text.strip() in ["<extra_id_0>", "<extra_id_0>.", ""]:
             logger.warning("Model generated trivial output. Returning original text.")
             return text
-            
+        
         return generated_text
         
     def save(self, path: str):
