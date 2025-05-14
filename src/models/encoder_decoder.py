@@ -8,6 +8,7 @@ from transformers import (
 )
 import logging
 import re
+from langdetect import detect
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -55,37 +56,22 @@ class MultilingualTransformer:
             "repetition_penalty": 1.2
         }
         
-    def _prepare_input(
-        self,
-        text: str,
-        few_shot_examples: Optional[List[Tuple[str, str]]] = None,
-        style: Optional[str] = None,
-        source_lang: Optional[str] = None,
-        target_lang: Optional[str] = None
-    ) -> str:
-        """
-        Prepare input text for generation.
-        
-        Args:
-            text: Input text
-            few_shot_examples: List of (input, output) pairs for few-shot learning
-            style: Target style (ignored)
-            source_lang: Source language (optional)
-            target_lang: Target language (optional)
-            
-        Returns:
-            str: Prepared input text
-        """
-        # Build prompt with few-shot examples
-        prompt = "Translate informal text to formal:\n\n"
-        
+    def _prepare_input(self, text: str, few_shot_examples: Optional[List[Tuple[str, str]]] = None) -> str:
+        """Prepare input text with few-shot examples if provided."""
         if few_shot_examples:
-            for input_text, output_text in few_shot_examples:
-                prompt += f"Informal: {input_text}\nFormal: {output_text}\n\n"
-        
-        # Add target input
-        prompt += f"Informal: {text}\nFormal:"
-        
+            # Detect language
+            lang = detect(text)
+            prompt = f"Translate informal {lang} text to formal {lang}:\n"
+            
+            # Add few-shot examples
+            for informal, formal in few_shot_examples:
+                prompt += f"Informal: {informal}\nFormal: {formal}\n"
+            
+            # Add target input
+            prompt += f"Informal: {text}\nFormal:"
+        else:
+            prompt = text
+            
         return prompt
         
     def generate(

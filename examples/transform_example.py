@@ -11,77 +11,76 @@ from src.cli import StyleTransformerCLI
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+def print_separator():
+    print("-" * 40)
+
+def print_example_header(example_num, language):
+    print("\n" + "=" * 80)
+    print(f"Example {example_num}: Informal to Formal ({language})")
+    print("-" * 80)
+
+def build_prompt(language, examples, input_text):
+    prompt = (
+        f"You are a formal language assistant. Convert informal {language.lower()} to formal {language.lower()}.\n\n"
+        f"Examples:\n"
+    )
+    for informal, formal in examples:
+        prompt += f"Informal: {informal}\nFormal: {formal}\n\n"
+    prompt += f"Now convert:\nInformal: {input_text}\nFormal:"
+    return prompt
+
 def main():
-    # Initialize transformer
-    transformer = StyleTransformerCLI()
-    
-    # Define few-shot examples
-    few_shot_examples = [
+    # ✅ Use flan-t5 model
+    transformer = StyleTransformerCLI(model_name="google/flan-t5-base")
+
+    # English examples
+    few_shot_examples_en = [
         ("yo wassup fam", "Hello, how are you doing?"),
         ("bruh this is lit", "This is excellent."),
         ("gonna bounce", "I must leave now."),
         ("can't make it, got stuff to do", "I apologize, but I am unable to attend as I have prior commitments."),
         ("wanna grab food?", "Would you like to join me for a meal?")
     ]
-    
-    # Example 1: Informal to Formal
-    print("\nExample 1: Informal to Formal")
-    input_text = "yo wassup fam"
-    output = transformer.transform(
-        text=input_text,
-        few_shot_examples=few_shot_examples
-    )
-    print(f"Input: {input_text}")
-    print(f"Output: {output}")
-    
-    # Example 2: Informal to Formal
-    print("\nExample 2: Informal to Formal")
-    input_text = "bruh this is lit"
-    output = transformer.transform(
-        text=input_text,
-        few_shot_examples=few_shot_examples
-    )
-    print(f"Input: {input_text}")
-    print(f"Output: {output}")
-    
-    # Example 3: Informal to Formal
-    print("\nExample 3: Informal to Formal")
-    input_text = "gonna bounce, see ya!"
-    output = transformer.transform(
-        text=input_text,
-        few_shot_examples=few_shot_examples
-    )
-    print(f"Input: {input_text}")
-    print(f"Output: {output}")
-    
-    # Example 4: Informal to Formal
-    print("\nExample 4: Informal to Formal")
-    input_text = "can't make it, got stuff to do"
-    output = transformer.transform(
-        text=input_text,
-        few_shot_examples=few_shot_examples
-    )
-    print(f"Input: {input_text}")
-    print(f"Output: {output}")
-    
-    # Example 5: With Evaluation
-    print("\nExample 5: With Evaluation")
-    input_text = "wanna grab food?"
-    output = transformer.transform(
-        text=input_text,
-        few_shot_examples=few_shot_examples
-    )
-    print(f"Input: {input_text}")
-    print(f"Output: {output}")
-    
-    # Evaluate transformation
-    metrics = transformer.evaluate_transformation(
-        original=input_text,
-        transformed=output
-    )
-    print("\nEvaluation metrics:")
-    for metric, value in metrics.items():
-        print(f"{metric}: {value:.4f}")
-        
+
+    test_inputs_en = [
+        "yo wassup fam",
+        "bruh this is lit",
+        "gonna bounce, see ya!",
+        "can't make it, got stuff to do",
+        "wanna grab food?"
+    ]
+
+    print_example_header(1, "English")
+    for input_text in test_inputs_en:
+        prompt = build_prompt("English", few_shot_examples_en, input_text)
+        output = transformer.transform(text=prompt)
+        print(f"Input:   {input_text}")
+        print(f"Output:  {output}")
+        print_separator()
+
+    # French examples
+    few_shot_examples_fr = [
+        ("ça va mec ?", "Comment allez-vous ?"),
+        ("t'es où ?", "Où êtes-vous ?"),
+        ("j'vais y aller", "Je vais y aller."),
+        ("t'as pas le temps ?", "N'avez-vous pas le temps ?"),
+        ("on se voit plus tard ?", "Nous verrons-nous plus tard ?"),
+    ]
+
+    test_inputs_fr = [
+        "salut, tu fais quoi ?",
+        "t'as faim ?",
+        "t'as compris ?",
+        "on y va ?"
+    ]
+
+    print_example_header(2, "French")
+    for input_text in test_inputs_fr:
+        prompt = build_prompt("French", few_shot_examples_fr, input_text)
+        output = transformer.transform(text=prompt)
+        print(f"Input:   {input_text}")
+        print(f"Output:  {output}")
+        print_separator()
+
 if __name__ == "__main__":
-    main() 
+    main()

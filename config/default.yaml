@@ -1,5 +1,5 @@
 # Model configuration
-model_name: "t5-base"
+model_name: "google/mt5-base"
 max_length: 512
 num_beams: 5
 temperature: 0.8
