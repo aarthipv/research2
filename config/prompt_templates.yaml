@@ -1,0 +1,39 @@
+formal:
+  en: "Transform the following text into formal English while preserving its meaning: {text}"
+  fr: "Transformez le texte suivant en français formel tout en préservant son sens : {text}"
+  hi: "निम्नलिखित पाठ को औपचारिक हिंदी में बदलें, इसका अर्थ बनाए रखते हुए: {text}"
+
+simple:
+  en: "Simplify the following text while maintaining its core message: {text}"
+  fr: "Simplifiez le texte suivant tout en conservant son message principal : {text}"
+  hi: "निम्नलिखित पाठ को सरल बनाएं, इसके मुख्य संदेश को बनाए रखते हुए: {text}"
+
+academic:
+  en: "Rewrite the following text in an academic style suitable for scholarly writing: {text}"
+  fr: "Réécrivez le texte suivant dans un style académique adapté à l'écriture savante : {text}"
+  hi: "निम्नलिखित पाठ को विद्वतापूर्ण लेखन के लिए उपयुक्त शैक्षणिक शैली में पुनः लिखें: {text}"
+
+casual:
+  en: "Convert the following text into casual, conversational English: {text}"
+  fr: "Convertissez le texte suivant en français décontracté et conversationnel : {text}"
+  hi: "निम्नलिखित पाठ को आकस्मिक, बातचीत वाली हिंदी में बदलें: {text}"
+
+few_shot:
+  en:
+    examples:
+      - input: "The weather is really bad today."
+        output: "The current meteorological conditions are unfavorable."
+      - input: "I think we should go now."
+        output: "I recommend that we proceed at this juncture."
+  fr:
+    examples:
+      - input: "Il fait vraiment mauvais aujourd'hui."
+        output: "Les conditions météorologiques actuelles sont défavorables."
+      - input: "Je pense qu'on devrait y aller maintenant."
+        output: "Je recommande que nous procédions à ce moment précis."
+  hi:
+    examples:
+      - input: "आज मौसम बहुत खराब है।"
+        output: "वर्तमान मौसम संबंधी परिस्थितियां प्रतिकूल हैं।"
+      - input: "मुझे लगता है हमें अभी जाना चाहिए।"
+        output: "मेरा सुझाव है कि हम इस समय आगे बढ़ें।" 

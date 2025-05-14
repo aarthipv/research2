@@ -1,0 +1,55 @@
+model:
+  name: "google/mt5-base"
+  max_length: 512
+  num_beams: 4
+  temperature: 0.7
+  top_p: 0.9
+  top_k: 50
+
+prompt_tuning:
+  enabled: true
+  prefix_length: 20
+  learning_rate: 1e-4
+  num_epochs: 10
+  batch_size: 8
+
+rag:
+  enabled: true
+  index_type: "faiss"
+  num_retrieved_docs: 3
+  max_context_length: 512
+  knowledge_sources:
+    - wikipedia
+    - custom_kb
+
+evaluation:
+  metrics:
+    - bleu
+    - bertscore
+    - rouge
+  human_eval:
+    enabled: false
+    num_samples: 100
+
+languages:
+  supported:
+    - en
+    - fr
+    - hi
+    - es
+    - de
+  default_source: "en"
+  default_target: "en"
+
+styles:
+  supported:
+    - formal
+    - simple
+    - academic
+    - casual
+  default: "formal"
+
+logging:
+  level: "INFO"
+  save_dir: "logs"
+  metrics_dir: "metrics" 
